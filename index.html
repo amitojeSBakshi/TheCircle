@@ -1,0 +1,185 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Circle</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Circle - pick a city, open its events board.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
+<meta name="build" content="20260814-183459-5772">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Circle">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+</head>
+<body><style>
+  :root{
+    --ink:#231d17; --ink-2:#4f453a; --ink-3:#7d7164; --ink-4:#a99c8c;
+    --paper:#fdf9f3; --card:#fffefb; --line:#e6dccd; --line-2:#f1e9dc;
+    --accent:#c2410c;
+    --shadow:0 1px 2px #231d1708, 0 4px 14px #231d170d;
+    --shadow-lg:0 6px 14px #231d1712, 0 18px 40px #231d1718;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ink:#f4ece0; --ink-2:#d2c6b6; --ink-3:#9e9284; --ink-4:#776c5f;
+      --paper:#17130f; --card:#211c17; --line:#383027; --line-2:#2a241e;
+      --accent:#f2874f;
+      --shadow:0 1px 2px #0006, 0 4px 14px #0004;
+      --shadow-lg:0 6px 14px #0007, 0 18px 40px #0006;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#f4ece0; --ink-2:#d2c6b6; --ink-3:#9e9284; --ink-4:#776c5f;
+    --paper:#17130f; --card:#211c17; --line:#383027; --line-2:#2a241e;
+    --accent:#f2874f;
+    --shadow:0 1px 2px #0006, 0 4px 14px #0004;
+    --shadow-lg:0 6px 14px #0007, 0 18px 40px #0006;
+  }
+  :root[data-theme="light"]{
+    --ink:#231d17; --ink-2:#4f453a; --ink-3:#7d7164; --ink-4:#a99c8c;
+    --paper:#fdf9f3; --card:#fffefb; --line:#e6dccd; --line-2:#f1e9dc;
+    --accent:#c2410c;
+    --shadow:0 1px 2px #231d1708, 0 4px 14px #231d170d;
+    --shadow-lg:0 6px 14px #231d1712, 0 18px 40px #231d1718;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0; padding:0}
+  body{
+    background:var(--paper); color:var(--ink); font-family:var(--sans);
+    min-height:100vh; display:flex; flex-direction:column;
+  }
+  .wrap{max-width:640px; margin:0 auto; padding:56px 20px 40px; width:100%; flex:1}
+
+  header{text-align:center; margin-bottom:40px}
+  header .mark{
+    width:64px; height:64px; border-radius:50%; margin:0 auto 18px;
+    background:var(--accent); color:var(--card);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-size:26px; font-weight:700;
+    box-shadow:var(--shadow-lg);
+  }
+  h1{font-family:var(--serif); font-size:32px; font-weight:700; margin:0 0 8px}
+  header p{color:var(--ink-3); font-size:15px; margin:0; line-height:1.5}
+
+  .states{display:flex; flex-direction:column; gap:14px; margin-top:36px}
+
+  a.state{
+    display:flex; align-items:center; gap:16px;
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:18px 20px; text-decoration:none; color:inherit;
+    box-shadow:var(--shadow); transition:border-color .15s, box-shadow .15s, transform .15s;
+  }
+  a.state:hover{border-color:var(--accent); box-shadow:var(--shadow-lg); transform:translateY(-1px)}
+  a.state:active{transform:translateY(0)}
+
+  .state .badge{
+    flex:0 0 auto; width:48px; height:48px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-weight:700; font-size:18px;
+    background:var(--line-2); color:var(--ink-2);
+  }
+  .state.live .badge{background:var(--accent); color:#fff}
+  :root[data-theme="dark"] .state.live .badge{color:#17130f}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .state.live .badge{color:#17130f}
+  }
+
+  .state .body{flex:1; min-width:0}
+  .state .city{font-family:var(--serif); font-size:19px; font-weight:700; margin:0 0 2px}
+  .state .region{font-size:13px; color:var(--ink-3); margin:0}
+  .state .go{flex:0 0 auto; color:var(--accent); font-weight:700; font-size:14px}
+  .state .go::after{content:" →"}
+
+  .state.soon{opacity:.6; cursor:default; pointer-events:none}
+  .state.soon .go{color:var(--ink-4)}
+  .state.soon .go::after{content:""}
+
+  footer{
+    text-align:center; padding:32px 20px 40px; color:var(--ink-4); font-size:13px;
+    line-height:1.6;
+  }
+  footer a{color:var(--ink-3)}
+
+  .note{
+    text-align:center; margin-top:28px; font-size:13px; color:var(--ink-4);
+    line-height:1.5; padding:0 8px;
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="mark">C</div>
+    <h1>Circle</h1>
+    <p>Curated events, city by city. Pick a state to open its board.</p>
+  </header>
+
+  <div class="states" id="states"></div>
+
+  <p class="note">Each board opens in its own tab and installs on your phone
+    separately — pick the one for wherever you are.</p>
+</div>
+
+<footer>
+  Managed by Amitoje Singh Bakshi
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Add a state here when its board goes live. url:null keeps the card visible but
+     unclickable, so people know a city is coming rather than wondering why it's
+     missing entirely. */
+  var STATES = [
+    {state:"Delhi NCR",    city:"Delhi Circle",     init:"D",
+     url:"https://amitojesbakshi.github.io/DelhiCircle/"},
+    {state:"Karnataka",    city:"Bangalore Circle", init:"B",
+     url:"https://amitojesbakshi.github.io/BangaloreCircle/"},
+    {state:"Maharashtra",  city:"Mumbai Circle",    init:"M",
+     url:null}
+  ];
+
+  var root = document.getElementById("states");
+  STATES.forEach(function(s){
+    var live = !!s.url;
+    var el = document.createElement(live ? "a" : "div");
+    el.className = "state " + (live ? "live" : "soon");
+    if (live) { el.href = s.url; el.target = "_blank"; el.rel = "noopener"; }
+    el.innerHTML =
+      '<span class="badge">' + s.init + '</span>' +
+      '<span class="body">' +
+        '<span class="city">' + s.city + '</span>' +
+        '<span class="region">' + s.state + (live ? "" : " — opening soon") + '</span>' +
+      '</span>' +
+      '<span class="go">' + (live ? "Open" : "Soon") + '</span>';
+    root.appendChild(el);
+  });
+
+  /* theme: same manual override pattern as the city boards, so a choice here is
+     remembered if a future version adds one; today the toggle isn't exposed, but the
+     CSS and storage key already match so nothing has to change when it is. */
+  try {
+    var t = localStorage.getItem("circleHub.theme");
+    if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+  } catch (err) {}
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
+</script>
+</body>
+</html>
