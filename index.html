@@ -8,7 +8,7 @@
 <meta name="description" content="Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260814-191051-8005">
+<meta name="build" content="20260814-192928-2233">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -93,7 +93,7 @@
     :root:not([data-theme="light"]) .state.live .badge{color:#17130f}
   }
 
-  .state .body{flex:1; min-width:0}
+  .state .body{flex:1; min-width:0; display:flex; flex-direction:column}
   .state .city{font-family:var(--serif); font-size:19px; font-weight:700; margin:0 0 2px}
   .state .region{font-size:13px; color:var(--ink-3); margin:0}
   .state .go{flex:0 0 auto; color:var(--accent); font-weight:700; font-size:14px}
