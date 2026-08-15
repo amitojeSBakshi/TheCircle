@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260815-203422-6409">
+<meta name="build" content="20260815-203647-1181">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -259,7 +259,7 @@
     el.className = "state " + (live ? "live" : "soon");
     el.style.setProperty("--i", i);
     if (live) {
-      el.href = s.url; el.target = "_blank"; el.rel = "noopener";
+      el.href = s.url;
       el.addEventListener("click", function(){
         if (typeof gtag === "function") gtag("event", "state_click", {state: s.state, city: s.city});
       });
