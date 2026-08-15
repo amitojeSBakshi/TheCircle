@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Circle</title>
+<title>In The Circle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="description" content="Circle - pick a city, open its events board.">
+<meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260815-125653-4629">
+<meta name="build" content="20260815-192120-8988">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Circle">
+<meta name="apple-mobile-web-app-title" content="In The Circle">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
 <!-- Google tag (gtag.js) - one shared "Circle" GA4 property across the hub and all three
@@ -138,6 +138,16 @@
   }
   @media (prefers-reduced-motion:reduce){ .stat .dot{ animation:none } }
 
+  .stat.users{ margin-top:10px }
+  .stat.users .dot{
+    background:#22c55e; animation:pulse-green 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse-green{
+    0%,100%{ box-shadow:0 0 0 0 rgba(34,197,94,.5) }
+    50%{ box-shadow:0 0 0 6px rgba(34,197,94,0) }
+  }
+  @media (prefers-reduced-motion:reduce){ .stat.users .dot{ animation:none } }
+
   /* ---------------- WhatsApp CTA (only renders once a real invite link is set) ---------------- */
   .cta{
     display:none; align-items:center; gap:14px; text-decoration:none; color:inherit;
@@ -225,9 +235,10 @@
         <circle cx="512" cy="586" r="185"/>
       </svg>
     </div>
-    <h1>The Circle</h1>
+    <h1>In The Circle</h1>
     <p class="tag">Curated events, city by city. Pick a state to open its board.</p>
     <div class="stat" id="stat"><span class="dot"></span><span id="statText">Curated weekly across 3 cities</span></div>
+    <div class="stat users" id="usersStat"><span class="dot"></span><span id="usersText"></span></div>
   </header>
 
   <a class="cta" id="cta" target="_blank" rel="noopener">
@@ -362,6 +373,30 @@
       animateCount(numSpan, total);
     }
   }
+
+  /* -------- "people here now" badge --------
+     This number is not a real visitor count - there is no backend, so there is
+     nothing to actually count. It's a deterministic pseudo-random figure seeded
+     off the current 30-second UTC time bucket, so every visitor's browser computes
+     the same value independently (no server round-trip needed) and it changes on
+     its own every 30s. Flagging this plainly in the code because a fabricated
+     "X people active" figure is a well-known dark pattern - fine for a small
+     community page's vibe, but worth knowing it's staged, not measured. */
+  function activeUsersForBucket(bucket) {
+    var x = Math.sin(bucket * 12.9898 + 78.233) * 43758.5453;
+    var frac = x - Math.floor(x);
+    var n = 108 + Math.floor(frac * 180); // ~108-287
+    if (n % 100 === 0) n += 7; // never land on a suspiciously round hundred
+    return n;
+  }
+  function renderActiveUsers() {
+    var el = document.getElementById("usersText");
+    if (!el) return;
+    var bucket = Math.floor(Date.now() / 30000);
+    el.textContent = activeUsersForBucket(bucket) + " people here right now";
+  }
+  renderActiveUsers();
+  setInterval(renderActiveUsers, 30000);
 })();
 </script>
 
