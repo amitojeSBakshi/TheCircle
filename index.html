@@ -8,7 +8,7 @@
 <meta name="description" content="Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260814-192928-2233">
+<meta name="build" content="20260815-075549-4499">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -16,6 +16,17 @@
 <meta name="apple-mobile-web-app-title" content="Circle">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
+<!-- Google tag (gtag.js) - one shared "Circle" GA4 property across the hub and all three
+     city boards. 'city' rides on every hit as a custom parameter so the four sites stay
+     distinguishable inside one property rather than needing four separate dashboards. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-88F80YY2NQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('set', 'city', 'Hub');
+  gtag('config', 'G-88F80YY2NQ');
+</script>
 </head>
 <body><style>
   :root{
@@ -153,7 +164,12 @@
     var live = !!s.url;
     var el = document.createElement(live ? "a" : "div");
     el.className = "state " + (live ? "live" : "soon");
-    if (live) { el.href = s.url; el.target = "_blank"; el.rel = "noopener"; }
+    if (live) {
+      el.href = s.url; el.target = "_blank"; el.rel = "noopener";
+      el.addEventListener("click", function(){
+        if (typeof gtag === "function") gtag("event", "state_click", {state: s.state, city: s.city});
+      });
+    }
     el.innerHTML =
       '<span class="badge">' + s.init + '</span>' +
       '<span class="body">' +
