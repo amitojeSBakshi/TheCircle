@@ -8,7 +8,7 @@
 <meta name="description" content="Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260815-075549-4499">
+<meta name="build" content="20260815-124940-521">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -28,11 +28,12 @@
   gtag('config', 'G-88F80YY2NQ');
 </script>
 </head>
-<body><style>
+<body><script>window.__CIRCLE_COUNTS__={"Delhi Circle":205,"Bangalore Circle":199,"Mumbai Circle":90};</script>
+<style>
   :root{
     --ink:#231d17; --ink-2:#4f453a; --ink-3:#7d7164; --ink-4:#a99c8c;
     --paper:#fdf9f3; --card:#fffefb; --line:#e6dccd; --line-2:#f1e9dc;
-    --accent:#c2410c;
+    --accent:#c2410c; --accent-2:#e8672b;
     --shadow:0 1px 2px #231d1708, 0 4px 14px #231d170d;
     --shadow-lg:0 6px 14px #231d1712, 0 18px 40px #231d1718;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -42,7 +43,7 @@
     :root{
       --ink:#f4ece0; --ink-2:#d2c6b6; --ink-3:#9e9284; --ink-4:#776c5f;
       --paper:#17130f; --card:#211c17; --line:#383027; --line-2:#2a241e;
-      --accent:#f2874f;
+      --accent:#f2874f; --accent-2:#ffab73;
       --shadow:0 1px 2px #0006, 0 4px 14px #0004;
       --shadow-lg:0 6px 14px #0007, 0 18px 40px #0006;
     }
@@ -50,14 +51,14 @@
   :root[data-theme="dark"]{
     --ink:#f4ece0; --ink-2:#d2c6b6; --ink-3:#9e9284; --ink-4:#776c5f;
     --paper:#17130f; --card:#211c17; --line:#383027; --line-2:#2a241e;
-    --accent:#f2874f;
+    --accent:#f2874f; --accent-2:#ffab73;
     --shadow:0 1px 2px #0006, 0 4px 14px #0004;
     --shadow-lg:0 6px 14px #0007, 0 18px 40px #0006;
   }
   :root[data-theme="light"]{
     --ink:#231d17; --ink-2:#4f453a; --ink-3:#7d7164; --ink-4:#a99c8c;
     --paper:#fdf9f3; --card:#fffefb; --line:#e6dccd; --line-2:#f1e9dc;
-    --accent:#c2410c;
+    --accent:#c2410c; --accent-2:#e8672b;
     --shadow:0 1px 2px #231d1708, 0 4px 14px #231d170d;
     --shadow-lg:0 6px 14px #231d1712, 0 18px 40px #231d1718;
   }
@@ -67,27 +68,105 @@
   body{
     background:var(--paper); color:var(--ink); font-family:var(--sans);
     min-height:100vh; display:flex; flex-direction:column;
+    position:relative; overflow-x:hidden;
   }
-  .wrap{max-width:640px; margin:0 auto; padding:56px 20px 40px; width:100%; flex:1}
 
-  header{text-align:center; margin-bottom:40px}
+  /* ---------------- living background: three slow-drifting ring orbits ---------------- */
+  .orbits{
+    position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  }
+  .orbits span{
+    position:absolute; border-radius:50%; border:1.5px solid var(--accent);
+    opacity:.10;
+  }
+  .orbits span:nth-child(1){ width:520px; height:520px; top:-180px; left:-160px;
+    animation:drift1 46s ease-in-out infinite; }
+  .orbits span:nth-child(2){ width:380px; height:380px; bottom:-140px; right:-120px;
+    animation:drift2 38s ease-in-out infinite; }
+  .orbits span:nth-child(3){ width:260px; height:260px; top:38%; right:-100px;
+    animation:drift3 52s ease-in-out infinite; opacity:.07; }
+  @keyframes drift1{
+    0%,100%{ transform:translate(0,0) rotate(0deg) }
+    50%{ transform:translate(30px,40px) rotate(20deg) }
+  }
+  @keyframes drift2{
+    0%,100%{ transform:translate(0,0) rotate(0deg) }
+    50%{ transform:translate(-24px,-30px) rotate(-16deg) }
+  }
+  @keyframes drift3{
+    0%,100%{ transform:translate(0,0) scale(1) }
+    50%{ transform:translate(-18px,24px) scale(1.08) }
+  }
+  @media (prefers-reduced-motion:reduce){
+    .orbits span{ animation:none !important }
+  }
+
+  .wrap{max-width:640px; margin:0 auto; padding:56px 20px 40px; width:100%; flex:1;
+    position:relative; z-index:1;}
+
+  header{text-align:center; margin-bottom:32px}
   header .mark{
-    width:64px; height:64px; border-radius:50%; margin:0 auto 18px;
-    background:var(--accent); color:var(--card);
+    width:108px; height:108px; margin:0 auto 20px;
     display:flex; align-items:center; justify-content:center;
-    font-family:var(--serif); font-size:26px; font-weight:700;
-    box-shadow:var(--shadow-lg);
+  }
+  header .mark svg{ width:100%; height:100%; overflow:visible }
+  header .mark circle{
+    fill:none; stroke:var(--accent); stroke-width:20;
   }
   h1{font-family:var(--serif); font-size:32px; font-weight:700; margin:0 0 8px}
-  header p{color:var(--ink-3); font-size:15px; margin:0; line-height:1.5}
+  header p.tag{color:var(--ink-3); font-size:15px; margin:0; line-height:1.5}
 
-  .states{display:flex; flex-direction:column; gap:14px; margin-top:36px}
+  /* live-counting stat line */
+  .stat{
+    display:inline-flex; align-items:center; gap:7px; margin-top:16px;
+    font-size:13px; font-weight:600; color:var(--ink-2);
+    background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:7px 14px; box-shadow:var(--shadow);
+  }
+  .stat .dot{
+    width:7px; height:7px; border-radius:50%; background:var(--accent); flex:0 0 auto;
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent) }
+    50%{ box-shadow:0 0 0 6px color-mix(in srgb, var(--accent) 0%, transparent) }
+  }
+  @media (prefers-reduced-motion:reduce){ .stat .dot{ animation:none } }
 
-  a.state{
+  /* ---------------- WhatsApp CTA (only renders once a real invite link is set) ---------------- */
+  .cta{
+    display:none; align-items:center; gap:14px; text-decoration:none; color:inherit;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-radius:16px; padding:16px 20px; margin:28px 0 6px;
+    box-shadow:var(--shadow-lg); transition:transform .15s;
+  }
+  .cta.on{ display:flex }
+  .cta:hover{ transform:translateY(-1px) }
+  .cta .ico{
+    flex:0 0 auto; width:38px; height:38px; border-radius:50%;
+    background:#ffffff2e; display:flex; align-items:center; justify-content:center;
+  }
+  .cta .ico svg{ width:20px; height:20px; fill:#fff }
+  .cta .body{ flex:1; min-width:0; color:#fff }
+  .cta .body b{ display:block; font-size:15px; font-family:var(--serif) }
+  .cta .body span{ display:block; font-size:12.5px; opacity:.88; margin-top:1px }
+  .cta .go{ flex:0 0 auto; color:#fff; font-weight:700; font-size:14px }
+  .cta .go::after{ content:" →" }
+
+  .states{display:flex; flex-direction:column; gap:14px; margin-top:30px}
+
+  a.state, div.state{
     display:flex; align-items:center; gap:16px;
     background:var(--card); border:1px solid var(--line); border-radius:16px;
     padding:18px 20px; text-decoration:none; color:inherit;
     box-shadow:var(--shadow); transition:border-color .15s, box-shadow .15s, transform .15s;
+    opacity:0; transform:translateY(10px);
+    animation:rise .5s ease forwards;
+    animation-delay:calc(var(--i, 0) * 70ms);
+  }
+  @keyframes rise{ to{ opacity:1; transform:translateY(0) } }
+  @media (prefers-reduced-motion:reduce){
+    a.state, div.state{ animation:none; opacity:1; transform:none }
   }
   a.state:hover{border-color:var(--accent); box-shadow:var(--shadow-lg); transform:translateY(-1px)}
   a.state:active{transform:translateY(0)}
@@ -106,7 +185,11 @@
 
   .state .body{flex:1; min-width:0; display:flex; flex-direction:column}
   .state .city{font-family:var(--serif); font-size:19px; font-weight:700; margin:0 0 2px}
-  .state .region{font-size:13px; color:var(--ink-3); margin:0}
+  .state .region{font-size:13px; color:var(--ink-3); margin:0; display:flex; align-items:center; gap:6px}
+  .state .region .count{
+    color:var(--ink-4); font-variant-numeric:tabular-nums;
+  }
+  .state .region .count::before{ content:"·"; margin-right:6px; color:var(--line) }
   .state .go{flex:0 0 auto; color:var(--accent); font-weight:700; font-size:14px}
   .state .go::after{content:" →"}
 
@@ -116,7 +199,7 @@
 
   footer{
     text-align:center; padding:32px 20px 40px; color:var(--ink-4); font-size:13px;
-    line-height:1.6;
+    line-height:1.6; position:relative; z-index:1;
   }
   footer a{color:var(--ink-3)}
 
@@ -126,12 +209,27 @@
   }
 </style>
 
+<div class="orbits" aria-hidden="true"><span></span><span></span><span></span></div>
+
 <div class="wrap">
   <header>
-    <div class="mark">C</div>
-    <h1>Circle</h1>
-    <p>Curated events, city by city. Pick a state to open its board.</p>
+    <div class="mark">
+      <svg viewBox="0 0 1024 1024">
+        <circle cx="437" cy="466" r="185"/>
+        <circle cx="587" cy="466" r="185"/>
+        <circle cx="512" cy="586" r="185"/>
+      </svg>
+    </div>
+    <h1>The Circle</h1>
+    <p class="tag">Curated events, city by city. Pick a state to open its board.</p>
+    <div class="stat" id="stat"><span class="dot"></span><span id="statText">Curated weekly across 3 cities</span></div>
   </header>
+
+  <a class="cta" id="cta" target="_blank" rel="noopener">
+    <span class="ico"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.92 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2zm5.8 14.1c-.24.68-1.4 1.33-1.94 1.4-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.29.36-.42.49-.14.14-.28.29-.12.56.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.18-.28.37-.23.62-.14.26.09 1.63.77 1.91.91.28.14.47.21.54.33.07.12.07.68-.17 1.36z"/></svg></span>
+    <span class="body"><b>Join the WhatsApp community</b><span id="ctaSub">Weekly picks, straight to your phone</span></span>
+    <span class="go">Open</span>
+  </a>
 
   <div class="states" id="states"></div>
 
@@ -159,11 +257,19 @@
      url:"https://amitojesbakshi.github.io/MumbaiCircle/"}
   ];
 
+  /* One WhatsApp community link for the whole Circle network. Paste the real
+     chat.whatsapp.com/... invite link below to switch the CTA on — it stays
+     hidden (display:none via the .cta class with no .on) until a link is set,
+     so a placeholder can never accidentally ship as a dead button. */
+  var WHATSAPP_URL = "";
+  var WHATSAPP_SUB = "Weekly picks, straight to your phone";
+
   var root = document.getElementById("states");
-  STATES.forEach(function(s){
+  STATES.forEach(function(s, i){
     var live = !!s.url;
     var el = document.createElement(live ? "a" : "div");
     el.className = "state " + (live ? "live" : "soon");
+    el.style.setProperty("--i", i);
     if (live) {
       el.href = s.url; el.target = "_blank"; el.rel = "noopener";
       el.addEventListener("click", function(){
@@ -174,11 +280,23 @@
       '<span class="badge">' + s.init + '</span>' +
       '<span class="body">' +
         '<span class="city">' + s.city + '</span>' +
-        '<span class="region">' + s.state + (live ? "" : " — opening soon") + '</span>' +
+        '<span class="region">' + s.state + (live ? "" : " — opening soon") +
+          '<span class="count" data-count-for="' + i + '"></span>' +
+        '</span>' +
       '</span>' +
       '<span class="go">' + (live ? "Open" : "Soon") + '</span>';
     root.appendChild(el);
   });
+
+  if (WHATSAPP_URL) {
+    var cta = document.getElementById("cta");
+    cta.href = WHATSAPP_URL;
+    document.getElementById("ctaSub").textContent = WHATSAPP_SUB;
+    cta.classList.add("on");
+    cta.addEventListener("click", function(){
+      if (typeof gtag === "function") gtag("event", "whatsapp_click", {source: "hub"});
+    });
+  }
 
   /* theme: same manual override pattern as the city boards, so a choice here is
      remembered if a future version adds one; today the toggle isn't exposed, but the
@@ -187,6 +305,58 @@
     var t = localStorage.getItem("circleHub.theme");
     if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
   } catch (err) {}
+
+  /* -------- counts: read from window.__CIRCLE_COUNTS__, baked in at publish time --------
+     An earlier version of this fetched each board's live page from the browser at
+     load time. That looked "live" but was genuinely unreliable in testing — the same
+     three boards read back anywhere from 98 to 476 total events across repeated loads
+     of identical data (494 real), almost certainly GitHub Pages' CDN serving different
+     edge caches to different requests. A counter that shows a different number every
+     time you open the page erodes trust faster than not having one, so counts are
+     instead computed once per publish (see publish.ps1, which reads each board's own
+     dashboard.html directly — no network involved, so no CDN variance) and injected
+     here as a plain object. This script only renders what it's handed; if the object
+     is missing (e.g. previewing hub.html directly, outside a real publish), it falls
+     back to a static line with no invented number. */
+  function animateCount(el, target) {
+    var t0 = null, dur = 700;
+    function step(ts){
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(eased * target);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  var liveStates = STATES.map(function(s, i){ return {s:s, i:i}; }).filter(function(x){ return !!x.s.url; });
+  var statText = document.getElementById("statText");
+  var counts = window.__CIRCLE_COUNTS__ || null;
+
+  if (!counts) {
+    statText.textContent = liveStates.length + " cities, curated weekly";
+  } else {
+    var total = 0, ok = 0;
+    liveStates.forEach(function(x){
+      var n = counts[x.s.city];
+      if (typeof n !== "number") return;
+      ok++; total += n;
+      var badge = root.querySelector('[data-count-for="' + x.i + '"]');
+      if (badge) animateCount(badge, n);
+    });
+    if (ok === 0) {
+      statText.textContent = liveStates.length + " cities, curated weekly";
+    } else {
+      statText.textContent = "";
+      var numSpan = document.createElement("span");
+      statText.appendChild(numSpan);
+      statText.appendChild(document.createTextNode(
+        " events on the board across " + ok + " " + (ok === 1 ? "city" : "cities")
+      ));
+      animateCount(numSpan, total);
+    }
+  }
 })();
 </script>
 
