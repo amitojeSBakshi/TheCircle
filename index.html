@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260816-041153-8900">
+<meta name="build" content="20260816-041730-6647">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -321,7 +321,7 @@
           // snapping straight to it each frame - this is what makes the turn look
           // smooth instead of stiff, independent of how twitchy the steering itself is
           var targetAngle = Math.atan2(actor.vy, actor.vx);
-          actor.facingAngle = lerpAngle(actor.facingAngle, targetAngle, 0.12);
+          actor.facingAngle = lerpAngle(actor.facingAngle, targetAngle, 0.4);
           ctx.save();
           ctx.translate(head.x, head.y);
           ctx.rotate(actor.facingAngle);
@@ -373,11 +373,13 @@
       // look twitchy/stiff, since its steering target jumped around every frame
       hunter.jitterLeft--;
       if (hunter.jitterLeft <= 0) {
-        hunter.jitterX = (Math.random() - 0.5) * 18;
-        hunter.jitterY = (Math.random() - 0.5) * 18;
-        hunter.jitterLeft = 14 + Math.random() * 16;
+        hunter.jitterX = (Math.random() - 0.5) * 9;
+        hunter.jitterY = (Math.random() - 0.5) * 9;
+        hunter.jitterLeft = 10 + Math.random() * 12;
       }
-      steer(hunter, runner.x + hunter.jitterX, runner.y + hunter.jitterY, 0.062);
+      // same acceleration as the runner's own wander steer, so it curves and reacts
+      // just as fast - the chase stays fair, and close, rather than one side feeling sluggish
+      steer(hunter, runner.x + hunter.jitterX, runner.y + hunter.jitterY, 0.075);
 
       move(runner); move(hunter);
 
