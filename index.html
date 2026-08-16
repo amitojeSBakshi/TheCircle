@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260816-035915-8046">
+<meta name="build" content="20260816-040231-166">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -331,50 +331,50 @@
       }
     }
 
-    var flashes = [];
-    function flashAt(x, y){ flashes.push({ x: x, y: y, life: 1 }); }
-    function drawFlashes(){
-      for (var i = flashes.length - 1; i >= 0; i--) {
-        var f = flashes[i];
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, 14 * (1 - f.life) + 4, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(192,57,43," + f.life.toFixed(2) + ")";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        f.life -= 0.055;
-        if (f.life <= 0) flashes.splice(i, 1);
-      }
-    }
+    var DANGER_R = 70;  // runner starts actively fleeing once the hunter is this close
+    var MIN_GAP = 22;   // hard floor - they are never allowed closer than this, ever
 
     function step(){
-      // runner wanders to a fresh random spot every so often
-      runner.retarget--;
-      if (runner.retarget <= 0) {
-        runner.targetX = 10 + Math.random() * (W - 20);
-        runner.targetY = 10 + Math.random() * (H - 20);
-        runner.retarget = 25 + Math.random() * 30;
-      }
-      steer(runner, runner.targetX, runner.targetY, 0.075);
+      var dx0 = runner.x - hunter.x, dy0 = runner.y - hunter.y;
+      var gap = Math.sqrt(dx0 * dx0 + dy0 * dy0) || 1;
 
-      // hunter chases wherever the runner actually is right now, a little imperfectly
+      if (gap < DANGER_R) {
+        // close call - override the wander target and bolt directly away from the hunter
+        var fleeX = runner.x + (dx0 / gap) * 120;
+        var fleeY = runner.y + (dy0 / gap) * 120;
+        steer(runner, fleeX, fleeY, 0.11);
+        runner.retarget = 20; // pick a fresh wander goal shortly after escaping
+      } else {
+        runner.retarget--;
+        if (runner.retarget <= 0) {
+          runner.targetX = 10 + Math.random() * (W - 20);
+          runner.targetY = 10 + Math.random() * (H - 20);
+          runner.retarget = 25 + Math.random() * 30;
+        }
+        steer(runner, runner.targetX, runner.targetY, 0.075);
+      }
+
+      // hunter chases wherever the runner actually is right now, a little imperfectly -
+      // it never quite gets there on purpose, so the gap above keeps winning the race
       steer(hunter, runner.x + (Math.random() - 0.5) * 18, runner.y + (Math.random() - 0.5) * 18, 0.062);
 
       move(runner); move(hunter);
-      pushTrail(runner); pushTrail(hunter);
 
-      var dx = runner.x - hunter.x, dy = runner.y - hunter.y;
-      if (Math.sqrt(dx * dx + dy * dy) < 10) {
-        flashAt((runner.x + hunter.x) / 2, (runner.y + hunter.y) / 2);
-        runner.x = 10 + Math.random() * (W - 20);
-        runner.y = 10 + Math.random() * (H - 20);
-        runner.trail = [];
-        runner.retarget = 0;
+      // hard guarantee: whatever the steering did, never let them actually touch
+      var dx1 = runner.x - hunter.x, dy1 = runner.y - hunter.y;
+      var gap1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
+      if (gap1 < MIN_GAP) {
+        var push = (MIN_GAP - gap1) / 2;
+        var ux = gap1 > 0.001 ? dx1 / gap1 : 1, uy = gap1 > 0.001 ? dy1 / gap1 : 0;
+        runner.x += ux * push; runner.y += uy * push;
+        hunter.x -= ux * push; hunter.y -= uy * push;
       }
+
+      pushTrail(runner); pushTrail(hunter);
 
       ctx.clearRect(0, 0, W, H);
       drawTrail(runner);
       drawTrail(hunter);
-      drawFlashes();
       requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
