@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260816-002321-6192">
+<meta name="build" content="20260816-034253-7112">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -61,18 +61,20 @@
     z-index:2;
   }
   .stamp .top{
-    display:flex; align-items:center; gap:3px; font-size:7.5px; font-weight:700; letter-spacing:.08em;
+    display:flex; align-items:center; gap:4px; font-size:9.5px; font-weight:700; letter-spacing:.08em;
     color:#1e8f4e; font-family:Georgia,serif;
   }
   .stamp b{ font-family:'Arial Narrow',Arial,sans-serif; font-size:24px; font-weight:900; line-height:1; font-variant-numeric:tabular-nums; color:#141210 }
   .stamp .bottom{ font-size:7.8px; letter-spacing:.05em; color:#141210; font-family:Georgia,serif; font-weight:700 }
-  .stamp .dot{ width:5px; height:5px; border-radius:50%; background:#1e8f4e; display:inline-block;
+  .stamp .dot{ width:7px; height:7px; border-radius:50%; background:#1e8f4e; display:inline-block;
     animation:pulse 1.8s ease-in-out infinite }
   @keyframes pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.35 } }
   @media (prefers-reduced-motion:reduce){ .stamp .dot{ animation:none } }
 
-  .mark{ width:150px; height:150px; margin:4px auto 14px; display:block }
+  .mark-wrap{ position:relative; width:220px; height:220px; margin:2px auto 6px }
+  .mark{ position:absolute; top:35px; left:35px; width:150px; height:150px; display:block; z-index:2 }
   .mark circle{ fill:none; stroke:#ff6a2b; stroke-width:34 }
+  .snake-canvas{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1 }
 
   .eyebrow{ text-align:center; font-size:10.5px; letter-spacing:.3em; color:#c0392b; font-weight:700; }
   h1{
@@ -141,11 +143,14 @@
       <span class="bottom">PEOPLE HERE</span>
     </div>
 
-    <svg class="mark" viewBox="0 0 1024 1024">
-      <circle cx="437" cy="466" r="185"/>
-      <circle cx="587" cy="466" r="185"/>
-      <circle cx="512" cy="586" r="185"/>
-    </svg>
+    <div class="mark-wrap">
+      <canvas class="snake-canvas" id="snakeCanvas" aria-hidden="true"></canvas>
+      <svg class="mark" viewBox="0 0 1024 1024">
+        <circle cx="437" cy="466" r="185"/>
+        <circle cx="587" cy="466" r="185"/>
+        <circle cx="512" cy="586" r="185"/>
+      </svg>
+    </div>
 
     <div class="eyebrow">THIS WEEK, EVERYWHERE</div>
     <h1>IN THE<br>CIRCLE</h1>
@@ -220,6 +225,56 @@
       if (typeof gtag === "function") gtag("event", "whatsapp_click", {source: "hub"});
     });
   }
+
+  /* -------- small fun tweak: a dot tracing a wavy criss-cross path around the logo,
+     with a short fading trail behind it (like a snake), capped to ~2.5cm on screen -------- */
+  (function(){
+    var canvas = document.getElementById("snakeCanvas");
+    if (!canvas || !canvas.getContext) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var ctx = canvas.getContext("2d");
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var SIZE = 220;
+    canvas.width = SIZE * dpr; canvas.height = SIZE * dpr;
+    canvas.style.width = SIZE + "px"; canvas.style.height = SIZE + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var cx = SIZE / 2, cy = SIZE / 2;
+    var AMP = 88, FREQ_A = 3, FREQ_B = 2, PHASE = 0.6;
+    var MAX_TRAIL_PX = 100; // "1.5 to 3cm" on a typical screen
+    var t = 0, trail = [];
+
+    function step(){
+      t += 0.018;
+      trail.push({ x: cx + AMP * Math.sin(FREQ_A * t), y: cy + AMP * Math.sin(FREQ_B * t + PHASE) });
+      var len = 0;
+      for (var i = trail.length - 1; i > 0; i--) {
+        var dx = trail[i].x - trail[i - 1].x, dy = trail[i].y - trail[i - 1].y;
+        len += Math.sqrt(dx * dx + dy * dy);
+        if (len > MAX_TRAIL_PX) { trail = trail.slice(i); break; }
+      }
+      ctx.clearRect(0, 0, SIZE, SIZE);
+      for (var j = 1; j < trail.length; j++) {
+        var a = trail[j - 1], b = trail[j], alpha = j / trail.length;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = "rgba(20,18,16," + (alpha * 0.7).toFixed(2) + ")";
+        ctx.lineWidth = 2.2;
+        ctx.lineCap = "round";
+        ctx.stroke();
+      }
+      if (trail.length) {
+        var head = trail[trail.length - 1];
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = "#141210";
+        ctx.fill();
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
 
   /* -------- bouncing background orbs, poster ink colors -------- */
   (function(){

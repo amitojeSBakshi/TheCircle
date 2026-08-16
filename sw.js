@@ -1,5 +1,5 @@
-﻿/* Circle hub - build 20260816-002321-6192 */
-var CACHE = "circle-hub-20260816-002321-6192";
+﻿/* Circle hub - build 20260816-034253-7112 */
+var CACHE = "circle-hub-20260816-034253-7112";
 var ASSETS = ["./", "./index.html", "./manifest.json",
               "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
