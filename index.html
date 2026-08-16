@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260816-035119-6536">
+<meta name="build" content="20260816-035512-321">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -267,8 +267,8 @@
         targetX: Math.random() * W, targetY: Math.random() * H, retarget: 0
       };
     }
-    var runner = makeActor("#f0b429", 1.15); // gold - being chased
-    var hunter = makeActor("#141210", 1.0);  // ink - chasing
+    var runner = makeActor("#f0b429", 2.6); // gold - being chased
+    var hunter = makeActor("#141210", 2.25);  // ink - chasing
 
     function steer(actor, tx, ty, accel){
       var dx = tx - actor.x, dy = ty - actor.y;
@@ -336,12 +336,12 @@
       if (runner.retarget <= 0) {
         runner.targetX = 10 + Math.random() * (W - 20);
         runner.targetY = 10 + Math.random() * (H - 20);
-        runner.retarget = 55 + Math.random() * 65;
+        runner.retarget = 25 + Math.random() * 30;
       }
-      steer(runner, runner.targetX, runner.targetY, 0.032);
+      steer(runner, runner.targetX, runner.targetY, 0.075);
 
       // hunter chases wherever the runner actually is right now, a little imperfectly
-      steer(hunter, runner.x + (Math.random() - 0.5) * 18, runner.y + (Math.random() - 0.5) * 18, 0.026);
+      steer(hunter, runner.x + (Math.random() - 0.5) * 18, runner.y + (Math.random() - 0.5) * 18, 0.062);
 
       move(runner); move(hunter);
       pushTrail(runner); pushTrail(hunter);
