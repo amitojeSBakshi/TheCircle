@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260816-035512-321">
+<meta name="build" content="20260816-035915-8046">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -260,15 +260,15 @@
       return "rgba(" + parseInt(m[1],16) + "," + parseInt(m[2],16) + "," + parseInt(m[3],16) + "," + a.toFixed(2) + ")";
     }
 
-    function makeActor(color, maxSpeed){
+    function makeActor(color, maxSpeed, shape){
       return {
-        x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0,
-        color: color, maxSpeed: maxSpeed, trail: [],
+        x: Math.random() * W, y: Math.random() * H, vx: 0.01, vy: 0.01,
+        color: color, maxSpeed: maxSpeed, shape: shape || "dot", trail: [],
         targetX: Math.random() * W, targetY: Math.random() * H, retarget: 0
       };
     }
-    var runner = makeActor("#f0b429", 2.6); // gold - being chased
-    var hunter = makeActor("#141210", 2.25);  // ink - chasing
+    var runner = makeActor("#f0b429", 2.6, "dot");     // gold - being chased
+    var hunter = makeActor("#141210", 2.25, "pointer"); // ink - chasing, cursor-shaped
 
     function steer(actor, tx, ty, accel){
       var dx = tx - actor.x, dy = ty - actor.y;
@@ -308,10 +308,26 @@
       }
       if (actor.trail.length) {
         var head = actor.trail[actor.trail.length - 1];
-        ctx.beginPath();
-        ctx.arc(head.x, head.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = actor.color;
-        ctx.fill();
+        if (actor.shape === "pointer") {
+          var ang = Math.atan2(actor.vy, actor.vx);
+          ctx.save();
+          ctx.translate(head.x, head.y);
+          ctx.rotate(ang);
+          ctx.beginPath();
+          ctx.moveTo(8, 0);      // tip, pointing the way it's moving
+          ctx.lineTo(-5, 5);
+          ctx.lineTo(-2.5, 0);   // back notch, gives it a cursor-arrow silhouette
+          ctx.lineTo(-5, -5);
+          ctx.closePath();
+          ctx.fillStyle = actor.color;
+          ctx.fill();
+          ctx.restore();
+        } else {
+          ctx.beginPath();
+          ctx.arc(head.x, head.y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = actor.color;
+          ctx.fill();
+        }
       }
     }
 
