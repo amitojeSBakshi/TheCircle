@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260816-041730-6647">
+<meta name="build" content="20260816-201550-8469">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -167,6 +167,7 @@
     </a>
 
     <div class="imprint">Managed by Amitoje Singh Bakshi</div>
+    <div class="imprint" style="margin-top:2px">+91 82870 28821</div>
   </div>
 </div>
 
@@ -177,8 +178,8 @@
   /* Add a state here when its board goes live. url:null keeps the row visible but
      unclickable and marked SOON, so people know a city is coming rather than
      wondering why it's missing entirely. */
-  var STATES = [
-    {state:"Delhi NCR",    city:"Delhi Circle",     init:"D",
+var STATES = [
+    {state:"Gurgaon | Noida",    city:"Delhi NCR Circle", init:"D",
      url:"https://delhi.inthecircle.in/"},
     {state:"Karnataka",    city:"Bangalore Circle", init:"B",
      url:"https://bangalore.inthecircle.in/"},
@@ -279,12 +280,29 @@
     // start on reacting, not on outrunning the hunter in a straight line
 
     function steer(actor, tx, ty, accel){
+      // clamp the aim point inside the arena so an actor never steers at a spot behind
+      // a wall - aiming at the wall is what let the chase wedge itself into a corner
+      var pad = 10;
+      if (tx < pad) tx = pad; if (tx > W - pad) tx = W - pad;
+      if (ty < pad) ty = pad; if (ty > H - pad) ty = H - pad;
       var dx = tx - actor.x, dy = ty - actor.y;
       var d = Math.sqrt(dx * dx + dy * dy) || 1;
       actor.vx += (dx / d) * accel;
       actor.vy += (dy / d) * accel;
       var sp = Math.sqrt(actor.vx * actor.vx + actor.vy * actor.vy);
       if (sp > actor.maxSpeed) { actor.vx = actor.vx / sp * actor.maxSpeed; actor.vy = actor.vy / sp * actor.maxSpeed; }
+    }
+    /* Steer away from the walls the moment they get close, not on impact. Without this
+       the runner and hunter can be pinned into a corner: the flee target points through
+       the wall, the bounce cuts velocity to half each frame, and the pair jitter in place
+       instead of ever escaping. A soft repulsion near the edge keeps them sliding along
+       the wall toward open space. */
+    function avoidWalls(actor){
+      var m = 16, k = 0.06;
+      if (actor.x < m) actor.vx += (m - actor.x) * k;
+      else if (actor.x > W - m) actor.vx -= (actor.x - (W - m)) * k;
+      if (actor.y < m) actor.vy += (m - actor.y) * k;
+      else if (actor.y > H - m) actor.vy -= (actor.y - (H - m)) * k;
     }
     function move(actor){
       actor.x += actor.vx; actor.y += actor.vy;
@@ -381,6 +399,7 @@
       // just as fast - the chase stays fair, and close, rather than one side feeling sluggish
       steer(hunter, runner.x + hunter.jitterX, runner.y + hunter.jitterY, 0.075);
 
+      avoidWalls(runner); avoidWalls(hunter);
       move(runner); move(hunter);
 
       // hard guarantee: whatever the steering did, never let them actually touch
