@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260816-040231-166">
+<meta name="build" content="20260816-040645-6799">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -267,8 +267,10 @@
         targetX: Math.random() * W, targetY: Math.random() * H, retarget: 0
       };
     }
-    var runner = makeActor("#f0b429", 2.6, "dot");     // gold - being chased
-    var hunter = makeActor("#141210", 2.25, "pointer"); // ink - chasing, cursor-shaped
+    var runner = makeActor("#f0b429", 2.4, "dot");     // gold - being chased
+    var hunter = makeActor("#141210", 2.4, "pointer"); // ink - chasing, cursor-shaped
+    // same top speed for both - the runner survives on tighter turning and a head
+    // start on reacting, not on outrunning the hunter in a straight line
 
     function steer(actor, tx, ty, accel){
       var dx = tx - actor.x, dy = ty - actor.y;
@@ -331,8 +333,8 @@
       }
     }
 
-    var DANGER_R = 70;  // runner starts actively fleeing once the hunter is this close
-    var MIN_GAP = 22;   // hard floor - they are never allowed closer than this, ever
+    var DANGER_R = 24;  // runner only breaks away at the last moment - close calls are the point
+    var MIN_GAP = 7;    // hard floor - a whisker apart at closest, but never touching
 
     function step(){
       var dx0 = runner.x - hunter.x, dy0 = runner.y - hunter.y;
