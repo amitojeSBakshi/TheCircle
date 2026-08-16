@@ -8,7 +8,7 @@
 <meta name="description" content="In The Circle - pick a city, open its events board.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20260815-220205-4590">
+<meta name="build" content="20260816-002321-6192">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -71,8 +71,8 @@
   @keyframes pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.35 } }
   @media (prefers-reduced-motion:reduce){ .stamp .dot{ animation:none } }
 
-  .mark{ width:112px; height:112px; margin:4px auto 14px; display:block }
-  .mark circle{ fill:none; stroke:#141210; stroke-width:34 }
+  .mark{ width:150px; height:150px; margin:4px auto 14px; display:block }
+  .mark circle{ fill:none; stroke:#ff6a2b; stroke-width:34 }
 
   .eyebrow{ text-align:center; font-size:10.5px; letter-spacing:.3em; color:#c0392b; font-weight:700; }
   h1{
@@ -81,7 +81,7 @@
   }
 
   .ribbon{
-    display:block; width:max-content; margin:-10px auto 0; background:#c0392b; color:#f2ede1;
+    display:block; width:max-content; margin:14px auto 0; background:#c0392b; color:#f2ede1;
     font-family:'Arial Narrow',Arial,sans-serif; font-weight:800; font-size:12.5px; letter-spacing:.04em;
     padding:6px 16px; border:2px solid #141210; transform:rotate(-2deg); position:relative; z-index:1;
     font-variant-numeric:tabular-nums;
@@ -150,7 +150,7 @@
     <div class="eyebrow">THIS WEEK, EVERYWHERE</div>
     <h1>IN THE<br>CIRCLE</h1>
     <div style="text-align:center"><span class="ribbon" id="ribbon">&nbsp;</span></div>
-    <p class="tag">Curated events, city by city. Pick a state to open its board.</p>
+    <p class="tag">Stop scrolling. Start showing up.</p>
 
     <div class="rule"></div>
     <div class="rows" id="states"></div>
