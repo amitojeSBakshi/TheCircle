@@ -8,7 +8,7 @@
 <meta name="description" content="Current events across Delhi NCR, Bangalore, Mumbai, Pune and Hyderabad â€” music, comedy, startups, workshops, food, wellness, sports, expos and more.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20261007-192432-887">
+<meta name="build" content="20261007-192651-7553">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -146,6 +146,19 @@
     border-top:1px dashed #14121055; padding-top:10px; text-transform:uppercase;
   }
   .imprint a{ color:#5c584f }
+
+  @media (max-width:420px){
+    .poster{ padding-left:16px; padding-right:16px }
+    .stamp{ width:76px; height:76px; top:10px; right:8px }
+    .stamp b{ font-size:20px }
+    .stamp .top{ font-size:8.5px }
+    .stamp .bottom{ font-size:6.8px }
+    .mark{ width:132px; height:132px }
+    h1{ font-size:47px }
+    .network{ font-size:9px; letter-spacing:.055em }
+    .category-strip{ gap:4px }
+    .category-strip span{ padding:3px 6px; font-size:8.5px }
+  }
 </style>
 
 <canvas id="bgCanvas" aria-hidden="true"></canvas>
@@ -525,6 +538,9 @@ var STATES = [
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
+    /* Background tabs may throttle animation frames. Always settle on the exact
+       source count so badges never remain blank or one short. */
+    setTimeout(function(){ el.textContent = target; }, dur + 120);
   }
 
   var liveStates = STATES.map(function(s, i){ return {s:s, i:i}; }).filter(function(x){ return !!x.s.url; });
