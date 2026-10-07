@@ -5,10 +5,10 @@
 <title>In The Circle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="description" content="Current events across Delhi NCR, Bangalore, Mumbai, Pune and Hyderabad â€” music, comedy, startups, workshops, food, wellness, sports, expos and more.">
+<meta name="description" content="Current events across ten Indian city circles, including Delhi NCR, Bangalore, Mumbai, Pune, Hyderabad, Chennai, Kolkata, Ahmedabad, Jaipur and Kochi.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20261007-192955-1442">
+<meta name="build" content="20261007-203910-3067">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -28,7 +28,7 @@
   gtag('config', 'G-88F80YY2NQ');
 </script>
 </head>
-<body><script>window.__CIRCLE_COUNTS__={"Delhi NCR Circle":137,"Bangalore Circle":161,"Mumbai Circle":111,"Pune Circle":121,"Hyderabad Circle":75};</script>
+<body><script>window.__CIRCLE_COUNTS__={"Delhi NCR Circle":217,"Bangalore Circle":246,"Mumbai Circle":199,"Pune Circle":185,"Hyderabad Circle":128,"Chennai Circle":107,"Kolkata Circle":114,"Ahmedabad Circle":121,"Jaipur Circle":69,"Kochi Circle":37};</script>
 <style>
   /* Print Poster — a committed single look (flyer pinned to a dark wall), not a
      light/dark adaptive theme. Colors are painted explicitly rather than through
@@ -92,21 +92,6 @@
 
   .tag{ text-align:center; font-size:11px; color:#4a4638; margin:16px 0 0; font-style:italic }
 
-  .network{
-    margin:9px auto 0; max-width:360px; text-align:center; color:#141210;
-    font-family:'Arial Narrow',Arial,sans-serif; font-size:10px; font-weight:800;
-    letter-spacing:.08em; line-height:1.45; text-transform:uppercase;
-  }
-  .category-strip{
-    display:flex; flex-wrap:wrap; justify-content:center; gap:5px; margin:12px auto 0;
-    max-width:390px;
-  }
-  .category-strip span{
-    border:1px solid #14121055; background:#fff9; padding:3px 7px;
-    font-family:'Arial Narrow',Arial,sans-serif; font-size:9px; font-weight:800;
-    letter-spacing:.02em;
-  }
-
   .rule{ height:0; border-top:2.5px solid #141210; margin:20px 0 4px }
 
   .rows{ display:flex; flex-direction:column }
@@ -156,9 +141,6 @@
     .stamp .bottom{ font-size:6.8px }
     .mark{ width:132px; height:132px }
     h1{ font-size:47px }
-    .network{ font-size:9px; letter-spacing:.055em }
-    .category-strip{ gap:4px }
-    .category-strip span{ padding:3px 6px; font-size:8.5px }
     .row{ gap:8px }
     .row .name{ font-size:19px }
     .row .place{ font-size:9.5px }
@@ -187,12 +169,6 @@
       <h1>IN THE<br>CIRCLE</h1>
       <div style="text-align:center"><span class="ribbon" id="ribbon">&nbsp;</span></div>
       <p class="tag">Stop scrolling. Start showing up.</p>
-      <p class="network">Delhi NCR · Karnataka · Maharashtra · Telangana</p>
-      <div class="category-strip" aria-label="Event categories across the Circle network">
-        <span>Music</span><span>Comedy</span><span>Startups</span><span>Tech &amp; AI</span>
-        <span>Books</span><span>Workshops</span><span>Food</span><span>Wellness</span>
-        <span>Sports</span><span>Expos</span><span>Open mics</span><span>Dance</span>
-      </div>
     </div>
 
     <div class="rule"></div>
@@ -226,7 +202,17 @@ var STATES = [
     {state:"Maharashtra",  city:"Pune Circle",      init:"P",
      url:"https://pune.inthecircle.in/"},
     {state:"Telangana",    city:"Hyderabad Circle", init:"H",
-     url:"https://hyderabad.inthecircle.in/"}
+     url:"https://hyderabad.inthecircle.in/"},
+    {state:"Tamil Nadu",   city:"Chennai Circle",   init:"C",
+     url:"chennai/"},
+    {state:"West Bengal",  city:"Kolkata Circle",   init:"K",
+     url:"kolkata/"},
+    {state:"Gujarat",      city:"Ahmedabad Circle", init:"A",
+     url:"ahmedabad/"},
+    {state:"Rajasthan",    city:"Jaipur Circle",    init:"J",
+     url:"jaipur/"},
+    {state:"Kerala",       city:"Kochi Circle",     init:"K",
+     url:"kochi/"}
   ];
 
   /* One WhatsApp community link for the whole Circle network. Paste the real

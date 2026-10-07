@@ -1,7 +1,8 @@
-﻿/* Circle hub - build 20261007-192955-1442 */
-var CACHE = "circle-hub-20261007-192955-1442";
+﻿/* Circle hub - build 20261007-203910-3067 */
+var CACHE = "circle-hub-20261007-203910-3067";
 var ASSETS = ["./", "./index.html", "./manifest.json",
-              "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+              "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png",
+              "./chennai/", "./kolkata/", "./ahmedabad/", "./jaipur/", "./kochi/"];
 
 self.addEventListener("install", function(e){
   self.skipWaiting();
