@@ -8,7 +8,7 @@
 <meta name="description" content="Current events across Delhi NCR, Bangalore, Mumbai, Pune and Hyderabad â€” music, comedy, startups, workshops, food, wellness, sports, expos and more.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20261007-192759-7694">
+<meta name="build" content="20261007-192955-1442">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -533,18 +533,9 @@ var STATES = [
      directly, outside a real publish) it falls back to a static line with no invented
      number. */
   function animateCount(el, target) {
-    var t0 = null, dur = 700;
-    function step(ts){
-      if (!t0) t0 = ts;
-      var p = Math.min(1, (ts - t0) / dur);
-      var eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(eased * target);
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-    /* Background tabs may throttle animation frames. Always settle on the exact
-       source count so badges never remain blank or one short. */
-    setTimeout(function(){ el.textContent = target; }, dur + 120);
+    /* Counts are operational data, so render the exact value immediately. This also
+       prevents background-tab throttling or screenshots from showing partial totals. */
+    el.textContent = target;
   }
 
   var liveStates = STATES.map(function(s, i){ return {s:s, i:i}; }).filter(function(x){ return !!x.s.url; });
