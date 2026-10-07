@@ -8,7 +8,7 @@
 <meta name="description" content="Current events across Delhi NCR, Bangalore, Mumbai, Pune and Hyderabad â€” music, comedy, startups, workshops, food, wellness, sports, expos and more.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20261007-192651-7553">
+<meta name="build" content="20261007-192759-7694">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -48,6 +48,7 @@
 
   .poster{
     width:100%; max-width:440px; background:#f2ede1; border:3px solid #141210;
+    min-width:0;
     box-shadow:0 18px 0 -6px #00000000, 10px 14px 0 #00000055, 0 30px 60px #00000070;
     padding:26px 22px 22px; position:relative;
     background-image:radial-gradient(#14121014 1px,transparent 1.3px);
@@ -117,7 +118,7 @@
   @keyframes rise{ to{ opacity:1; transform:translateY(0) } }
   @media (prefers-reduced-motion:reduce){ .row{ animation:none; opacity:1; transform:none } }
   .row .name{ font-family:'Arial Narrow',Arial,sans-serif; font-weight:800; font-size:21px; letter-spacing:.01em }
-  .row .place{ flex:1; font-size:11px; color:#5c584f; padding-left:2px }
+  .row .place{ flex:1; min-width:0; font-size:11px; color:#5c584f; padding-left:2px; overflow-wrap:anywhere }
   .row .n{
     font-family:'Arial Narrow',Arial,sans-serif; font-weight:800; font-size:13px; color:#141210;
     background:#f0b429; border:1.5px solid #141210; padding:3px 9px; flex:0 0 auto;
@@ -158,6 +159,9 @@
     .network{ font-size:9px; letter-spacing:.055em }
     .category-strip{ gap:4px }
     .category-strip span{ padding:3px 6px; font-size:8.5px }
+    .row{ gap:8px }
+    .row .name{ font-size:19px }
+    .row .place{ font-size:9.5px }
   }
 </style>
 
