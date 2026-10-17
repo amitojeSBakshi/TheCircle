@@ -24,7 +24,7 @@
 <meta name="twitter:image" content="https://inthecircle.in/icon-512.png">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf9f3">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17130f">
-<meta name="build" content="20261017-082731-7784">
+<meta name="build" content="20261017-085104-5390">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -382,10 +382,10 @@
   <div class="poster">
     <canvas class="snake-canvas" id="snakeCanvas" aria-hidden="true"></canvas>
     <div class="poster-head">
-      <div class="stamp">
-        <span class="top"><span class="dot"></span>LIVE</span>
-        <b id="stampN">&nbsp;</b>
-        <span class="bottom">CITIES</span>
+      <div class="stamp" role="img" aria-label="Demo: 249 active users. Sample data for the investor preview.">
+        <span class="top"><span class="dot"></span>DEMO</span>
+        <b id="stampN">249</b>
+        <span class="bottom">ACTIVE USERS</span>
       </div>
 
       <svg class="mark" viewBox="0 0 1024 1024">
@@ -394,7 +394,7 @@
         <circle cx="512" cy="586" r="185"/>
       </svg>
 
-      <div class="eyebrow">FOUR CITIES. MORE WAYS TO SHOW UP.</div>
+      <div class="eyebrow">TEN CITIES. MORE WAYS TO SHOW UP.</div>
       <h1>IN THE<br>CIRCLE</h1>
       <div style="text-align:center"><span class="ribbon" id="ribbon">&nbsp;</span></div>
       <p class="tag">Stop scrolling. Start showing up.</p>
@@ -777,13 +777,14 @@ var STATES = [
     }
   }
 
-  /* The stamp describes the actual connected city boards. */
+  /* A clearly labelled sample metric for the investor preview. */
   var stampEl = document.getElementById("stampN");
-  if (stampEl) stampEl.textContent = liveStates.length;
+  if (stampEl) stampEl.textContent = "249";
 })();
 </script>
 
 <script id="circle-subscription-script">(function(){document.addEventListener('click',function(ev){var a=ev.target.closest&&ev.target.closest('[data-subscribe]');if(!a)return;if(!window.HTMLDialogElement)return;ev.preventDefault();var dialog=document.getElementById('circleSubscription');if(!dialog){dialog=document.createElement('dialog');dialog.id='circleSubscription';dialog.className='circle-subscribe';dialog.innerHTML='<div class="subscribe-head"><h2>Choose your city updates</h2><button type="button" data-close-subscription aria-label="Close email subscription">Close ×</button></div><p>Select one or more cities and enter your email. Subscribing is optional.</p><iframe title="Email subscription and city choices" src="https://docs.google.com/forms/d/e/1FAIpQLSfchRr4a0JLafz06-yk607QO9lCDflBVug-WXCvywCS5h1y3g/viewform?embedded=true" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe><p class="subscribe-fallback"><a href="https://docs.google.com/forms/d/e/1FAIpQLSfchRr4a0JLafz06-yk607QO9lCDflBVug-WXCvywCS5h1y3g/viewform" target="_blank" rel="noopener noreferrer">Open the subscription form in a new tab</a></p>';document.body.appendChild(dialog);dialog.querySelector('[data-close-subscription]').onclick=function(){dialog.close()};dialog.addEventListener('click',function(e){if(e.target===dialog){var r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}})}dialog.showModal()})})();</script>
+
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function(){
